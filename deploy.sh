@@ -1,17 +1,19 @@
 #!/bin/sh
 
-if [[ $# -eq 0 ]] ; then
-    echo '[deploy.sh] vault directory expected as first argument'
-    exit 1
+# Load environment variables from .env file
+if [ -f .env ]; then
+  export $(cat .env | grep -v '^#' | xargs)
+else
+  echo "Error: .env file not found"
+  exit 1
 fi
 
-SERVER=dig-ocean-vps
-DIR=/var/www/html/tonycodes.com/digital-garden/
+# Check if required environment variables are set
+if [ -z "$SERVER" ] || [ -z "$DIR" ]; then
+  echo "Error: SERVER and DIR must be defined in .env file"
+  exit 1
+fi
 
-OBSIDIAN_VAULT_DIR="$1"
-
-
-
-node build.js ${OBSIDIAN_VAULT_DIR} && rsync -avz --delete public/ ${SERVER}:${DIR}
+rsync -avz --delete public/ ${SERVER}:${DIR}
 
 exit 0
