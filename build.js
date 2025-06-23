@@ -116,6 +116,7 @@ files.forEach((filename) => {
     <head>
       <meta charset="utf-8">
       <title>${title}</title>
+      <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn5GrPC90ZXh0Pjwvc3ZnPg==">
       <link rel="stylesheet" href="style.css">
     </head>
     <body>
