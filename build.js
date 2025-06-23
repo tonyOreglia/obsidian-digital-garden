@@ -10,7 +10,18 @@ if (!VAULT_DIR) {
     process.exit(1);
 }
 
-if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR);
+// Clean public directory if it exists
+if (fs.existsSync(OUTPUT_DIR)) {
+  const existingFiles = fs.readdirSync(OUTPUT_DIR);
+  existingFiles.forEach(file => {
+    const filePath = path.join(OUTPUT_DIR, file);
+    if (fs.statSync(filePath).isFile()) {
+      fs.unlinkSync(filePath);
+    }
+  });
+} else {
+  fs.mkdirSync(OUTPUT_DIR);
+}
 
 const files = fs.readdirSync(VAULT_DIR, { recursive: true }).filter(f => f.endsWith('.md'));
 
@@ -57,13 +68,14 @@ files.forEach(filename => {
     return;
   }
 
-  console.log(`Processing ${filename}`);
-
   // Remove YAML frontmatter
   const contentWithoutYaml = removeYamlFrontmatter(md);
 
+  // Remove all tags (words that start with # and have no space after the #)
+  const contentWithoutTags = contentWithoutYaml.replace(/#[a-zA-Z0-9_-]+\b/g, '');
+
   // Replace [[Wiki Links]] with <a href="wiki-link.html">wiki link</a>
-  const processed = contentWithoutYaml.replace(/\[\[([^\]]+)\]\]/g, (match, p1) => {
+  const processed = contentWithoutTags.replace(/\[\[([^\]]+)\]\]/g, (match, p1) => {
     const slug = slugify(p1);
     return `<a href="${slug}.html">${p1}</a>`;
   });
@@ -77,6 +89,10 @@ files.forEach(filename => {
       <link rel="stylesheet" href="style.css">
     </head>
     <body>
+      <header>
+        <div class="site-title"><a href="/">Tony Codes</a></div>
+        <div class="site-subtitle">a digital garden derived from markdown notes</div>
+      </header>
       <main>${marked.parse(processed)}</main>
     </body>
     </html>
@@ -88,4 +104,10 @@ files.forEach(filename => {
     'utf-8'
   );
 });
+
+// Copy style.css to the output directory
+if (fs.existsSync('./style.css')) {
+  fs.copyFileSync('./style.css', path.join(OUTPUT_DIR, 'style.css'));
+  console.log('Copied style.css to public directory');
+}
 
