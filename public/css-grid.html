@@ -1,0 +1,63 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>CSS Grid</title>
+      <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+      <main><h1>CSS Grid</h1>
+<ul>
+<li>Turn html element into a grid container by setting the display prop to <code>grid</code></li>
+<li>can use <code>px</code>, <code>em</code>, <code>fr</code>, <code>auto</code>, <code>%</code> to set the width/heights</li>
+<li>a grid can be defined within a grid</li>
+</ul>
+<h2>CSS Grid Properties</h2>
+<h3>container props</h3>
+<ul>
+<li><code>grid-template-columns</code> indicates width and number of columns in grid container</li>
+<li><code>grid-template-rows</code> indicates the height and number of rows in a grid container</li>
+<li><code>grid-column-gap</code> to create a gap between columns</li>
+<li><code>grid-row-gap</code>; or just <code>grid-gap</code> to set both at once</li>
+<li><code>grid-column-gap</code> to create a gap between columns</li>
+<li><code>grid-row-gap</code>; or just <code>grid-gap</code> to set both at once</li>
+<li><code>justify-items</code> position all items of container horizontally</li>
+<li><code>align-items</code>: position all items of container vertically</li>
+<li><code>grid-template-areas</code>: define areas of the grid with variable names</li>
+</ul>
+<h3>item props</h3>
+<ul>
+<li><code>grid-column</code> to have an item take up multiple spaces of the grid</li>
+<li><code>grid-row</code> for rows; <strong>starting at 1</strong></li>
+<li><code>justify-self</code> to position the item <strong>horizontally</strong> within it&#39;s cell<ul>
+<li>set with <code>stretch</code> (default), <code>start</code>, <code>center</code>, or <code>end</code></li>
+</ul>
+</li>
+<li><code>align-self</code> to position item <strong>vertically</strong> within cell</li>
+<li><code>grid-area</code> to assign item to named grid location (named with <code>grid-template-areas</code>); or set using the grid lines</li>
+</ul>
+<h3>CSS function</h3>
+<ul>
+<li><code>repeat</code>: repeat <code>grid-template-columns</code> and <code>grid-template-rows</code> configurations <ul>
+<li><code>minmax</code>: set the min and max height/width of an element</li>
+<li><code>auto-fill</code> – auto repeat to fill</li>
+<li><code>auto-fit</code> – auto repeat to fill; but stretch if no more items to use</li>
+</ul>
+</li>
+</ul>
+<h2>Lexicon</h2>
+<p>item
+ ~ child of grid element</p>
+<p>container
+ ~ grid html element</p>
+<p>cell
+ ~ box within the grid</p>
+<p>area
+ ~ a grouping of cells</p>
+<p>grid lines
+ ~ the lines between grid cells; starting at one</p>
+</main>
+    </body>
+    </html>
+  

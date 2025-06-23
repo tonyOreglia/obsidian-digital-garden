@@ -1,0 +1,46 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>SASS</title>
+      <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+      <main><h1>SASS</h1>
+<ul>
+<li>Sass uses variables<ul>
+<li>In Sass, variables start with a $ followed by the variable name. For example:```
+$main-fonts: Arial, sans-serif;
+$headings-color: green;</li>
+</ul>
+</li>
+</ul>
+<p>h1 {
+  font-family: $main-fonts;
+  color: $headings-color;
+}</p>
+<pre><code>* Sass allows nesting of CSS rules
+* a *mixin* is a group of CSS declarations that can be reused throughout the style sheet. It works like a function, accepting values as parameters
+    * A mixin is called with the `@include` directive
+* The `@if` directive in Sass is useful to test for a specific case
+    * `@else if` and `@else` also work
+* `@for` also works
+* the `@each` directive which loops over each item in a list or map, for example:```
+@each $color in blue, red, green {
+  .#{$color}-text {color: $color;}
+}
+</code></pre>
+<ul>
+<li><code>@while</code> is also supported</li>
+<li><em>Partials</em> in Sass are separate files that hold segments of CSS code<ul>
+<li>Names for partials start with an underscore (<code>_</code>)</li>
+<li>To bring the code in the partial into another Sass file, use the @import directive</li>
+</ul>
+</li>
+<li><code>extend</code> enables borrowing the CSS rules from one element and build upon them in another</li>
+</ul>
+</main>
+    </body>
+    </html>
+  

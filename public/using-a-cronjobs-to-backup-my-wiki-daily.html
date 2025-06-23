@@ -1,0 +1,32 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Using a Cronjobs to Backup my Wiki Daily</title>
+      <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+      <main><h1>Using a Cronjobs to Backup my Wiki Daily</h1>
+<p>I basically just want to add all files, commit, and push to github once per day. The commands would be</p>
+<pre><code class="language-bash">git add .
+git commit -m &quot;cronjob daily backup&quot;
+git push
+</code></pre>
+<p>Ok so running that as a script works. But it will need to have an absolute path in order to with with crontab.</p>
+<p>The crontab should look something like</p>
+<pre><code class="language-bash">1 0 * * * /home/tony/dev/tiddlywiki/backup.sh
+</code></pre>
+<p>I can create the cronjob using</p>
+<pre><code class="language-bash">crontab -e
+</code></pre>
+<p>To test it though, I&#39;ll start with every two minutes, like this</p>
+<pre><code>* * * * * /home/tony/dev/tiddlywiki/backup.sh
+</code></pre>
+<p>That appears to have worked. Let&#39;s see if it works for the second change too.</p>
+<p>Used this for scheduling the crontab: <a href="https://crontab.guru">https://crontab.guru</a></p>
+<p>Next I want to setup a cronjob to render the public wiki daily as well.</p>
+</main>
+    </body>
+    </html>
+  

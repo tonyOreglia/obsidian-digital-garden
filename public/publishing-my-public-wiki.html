@@ -1,0 +1,65 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Publishing my Public Wiki</title>
+      <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+      <main><h1>Publishing my Public Wiki</h1>
+<p>I will create a public wiki using Tiddlywiki available at tonycodes.com/wiki. The wiki will be read only. It will be derived from a subset of my private wiki based on a special &quot;Live&quot; tag.</p>
+<p>First, I need to decide how to derive the public wiki. I could use bash, but it will be a bit complicated. I want to see if it&#39;s possible using the tiddlywiki 5 command line. I know there are some filtering tools. Let&#39;s investigate.</p>
+<p>The goal would be create a new set of tiddles from an existing set, based on the existence of the &quot;Live&quot; tag.</p>
+<h1>Using the <a href="https://tiddlywiki.com/static/BuildCommand.html">Build Command</a></h1>
+<p>The build command is for rendering a tiddlywiki, and this is what I want to do. The question is then how to filter the private wiki. A couple of options there:</p>
+<ol>
+<li><p>bash</p>
+</li>
+<li><p>tiddlywiki cli filter option</p>
+</li>
+</ol>
+<p>I know how to do it with bash. Let&#39;s look at the CLI.</p>
+<h1>Using the Tiddlywiki CLI Filter</h1>
+<p>Looks like the <a href="https://tiddlywiki.com/#SaveWikiFolderCommand">saveWikiFolder</a> is the option I am looking for.</p>
+<p>Ok that worked, with the command</p>
+<pre><code class="language-bash">$ tiddlywiki --load myWiki/ --savewikifolder ./testWikiPublic [tag[Live]]
+</code></pre>
+<p>Next I need to run serve the wiki, which I can do that simply with <code>tiddlywiki --listen</code>. However, I am getting the site served with no styling. Maybe I need to fix something in how I load and filter the wiki.</p>
+<p>Ok, I think the issue is that none of the system tiddlers are moved. I would like to avoid doing that with bash; but it&#39;s an option of the TW CLI doesn&#39;t support what I want.</p>
+<p>Maybe I should simply update my filter to include Live tiddlers or system tiddlers. Let&#39;s try that. Ok so a small update; with a space between filters as shown below, it grabs anything matching either filter:</p>
+<pre><code class="language-bash">$ tiddlywiki --load myWiki/ --savewikifolder ./testWikiPublic &#39;[tag[Live]] [is[system]]&#39;
+</code></pre>
+<p>Ok, that kind of worked, but not really. I also needed to manually move the tiddlywiki.info file. And there are some other issues with some of the custom settings that should not really be moved over. Maybe I need to just move the tiddlers and then build the tiddlers into a static html. Let me try that.</p>
+<p>The problem is formatting and system tiddlers. The load/save mechanism is just the tiddlers. That is fine, but I&#39;ll need to move them into a space with the right configuration files. For some reason the load/save is not allowed to be targetting a non-empy directory.</p>
+<p>Ok, so starting with the old public wiki configuration and tiddlers, I ran</p>
+<pre><code class="language-bash"># from testPublicWiki direcotry; delete all normal tiddlers
+find tiddlers/ -type f ! -name &#39;$__*&#39; -delete
+# move in the Live tiddlers
+tiddlywiki --load myWiki/ --output testWikiPublic/tiddlers --save [tag[Live]]
+# build
+tiddlywiki testWikiPublic/ --build
+# remove current served page
+sudo rm -rf /var/www/html/tonycodes.com/*
+# copy in the new site files
+sudo cp -r testWikiPublic/output/* /var/www/html/tonycodes.com/
+</code></pre>
+<p>And that worked and looks great! Now I need to move the public wiki to the intended domain. That is an easy change to the nginx config.</p>
+<pre><code class="language-nginx">location /wiki {
+    proxy_pass http://127.0.0.1:1445/;
+  }
+</code></pre>
+<p>Now, I need to actually host the files locally on port 1445, instead of serving them directly behind nginx. For this I&#39;ll use the tiddlywiki command line again, and making sure to keep the wiki as readonly.</p>
+<p>I want to use pm2 in order to have a centralized tool for hosing the various applications I like to run.</p>
+<p>First though, I&#39;ll experiment with readonly using the TW CLI.</p>
+<p><strong>Note, that I&#39;ll need to use the credentials option in order to protect my password, with the file git ignored.</strong></p>
+<p>Ok, so I was able to serve the files pm2 serve ./testWikiPublic/output/ 1445directly using pm2. For that I just needed to install and serve:</p>
+<pre><code class="language-bash">$ npm i -g pm2
+$ pm2 serve ./testWikiPublic/output/ 1445
+</code></pre>
+<p>Now I want to make sure the service runs as a system daemon so that it restarts when the server restarts. Let&#39;s look into how to do that. See <a href="systemctl.html">systemctl</a>.</p>
+<p>Actually,  I think I will do that later.</p>
+</main>
+    </body>
+    </html>
+  
